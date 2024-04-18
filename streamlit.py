@@ -1,5 +1,5 @@
 import streamlit as st
-from "Mindcase_Adityasharma_Assignment.ipynb" import query_engine
+from .mindcase_adityasharma_assignment import query_engine
 st.title("Blade Runner 2049 Expert")
 user_input = st.text_input("Enter your questions about Blade Runner 2049 :", "")
 if st.button("Submit"):
