@@ -10,8 +10,13 @@ from llama_index.core.postprocessor import MetadataReplacementPostProcessor, Sen
 
 # Initialize LlamaCPP with a pretrained model.
 
-messages_to_prompt = [...]  # Define your messages_to_prompt list here
-completion_to_prompt = [...]  # Define your completion_to_prompt list here
+def messages_to_prompt_func():
+    # Define your messages_to_prompt logic here
+    return [...]
+
+def completion_to_prompt_func():
+    # Define your completion_to_prompt logic here
+    return [...]
 
 
 llm = LlamaCPP(
