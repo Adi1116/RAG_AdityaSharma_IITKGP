@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-"""MindCase_AdityaSharma_Assignmnent"""
-
 
 import os
 import sys
@@ -11,22 +8,7 @@ from llama_index.llms.llama_cpp import LlamaCPP
 from llama_index.core.node_parser import SentenceWindowNodeParser
 from llama_index.core.postprocessor import MetadataReplacementPostProcessor, SentenceTransformerRerank
 
-# Install necessary packages
-pip_packages = [
-    'pypdf',
-    'torch',
-    'transformers',
-    'sentence-transformers',
-    'llama-index',
-    'llama-cpp-python',
-    'llama-index-embeddings-huggingface',
-    'llama-index-llms-llama-cpp'
-]
-
-for package in pip_packages:
-    os.system(f"pip install -q {package}")
-
-# Initialize LLAMA CPP
+# Initialize LlamaCPP with a pretrained model.
 llm = LlamaCPP(
     model_url='https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf',
     model_path=None,
@@ -37,7 +19,7 @@ llm = LlamaCPP(
     model_kwargs={"n_gpu_layers": -1},
     messages_to_prompt=messages_to_prompt,
     completion_to_prompt=completion_to_prompt,
-    verbose=True
+    verbose=True,
 )
 
 # Load documents
@@ -74,37 +56,12 @@ def get_query_engine(sentence_index, similarity_top_k=6, rerank_top_n=2):
 
 query_engine = get_query_engine(sentence_index=vector_index, similarity_top_k=6, rerank_top_n=2)
 
-# Define a function to read input with timeout
-def input_with_timeout(prompt, timeout):
-    print(prompt, end='', flush=True)
+# Streamlit app
+st.title("Blade Runner 2049 Expert")
+user_input = st.text_input("Enter your questions about Blade Runner 2049:", "")
+if st.button("Submit"):
     try:
-        response = input()
-        return response
-    except KeyboardInterrupt:
-        sys.exit(0)
-
-# Define a flag to indicate whether the loop should continue running.
-running = True
-
-while running:
-    try:
-        # Input a query from the user.
-        query = input("Enter your query (Press 'Esc' to exit): ")
-
-        # Check if the input is 'Esc' to exit.
-        if query.lower() == 'esc':
-            print("Exiting the loop...")
-            running = False
-            continue
-
-        # Query the engine with the input query.
-        response = query_engine.query(query)
-
-        # Print the response.
-        print(response)
-        print("\n")
-
-    except KeyboardInterrupt:
-        # If the user presses Ctrl+C, exit the loop.
-        print("\nExiting the loop...")
-        running = False
+        response = query_engine.query(user_input)
+        st.write(response)
+    except Exception as e:
+        st.write(f"An error occurred: {e}")
