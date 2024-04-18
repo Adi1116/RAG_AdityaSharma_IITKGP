@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """MindCase_AdityaSharma_Assignmnent"""
 
+
 import os
 import sys
 import torch
+import streamlit as st
 from llama_index.core import SimpleDirectoryReader, Document, VectorStoreIndex, ServiceContext, load_index_from_storage
 from llama_index.llms.llama_cpp import LlamaCPP
 from llama_index.core.node_parser import SentenceWindowNodeParser
 from llama_index.core.postprocessor import MetadataReplacementPostProcessor, SentenceTransformerRerank
-from llama_index.settings import Settings
 
 # Install necessary packages
 pip_packages = [
