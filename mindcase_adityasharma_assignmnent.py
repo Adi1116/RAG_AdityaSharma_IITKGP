@@ -9,6 +9,11 @@ from llama_index.core.node_parser import SentenceWindowNodeParser
 from llama_index.core.postprocessor import MetadataReplacementPostProcessor, SentenceTransformerRerank
 
 # Initialize LlamaCPP with a pretrained model.
+
+messages_to_prompt = [...]  # Define your messages_to_prompt list here
+completion_to_prompt = [...]  # Define your completion_to_prompt list here
+
+
 llm = LlamaCPP(
     model_url='https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf',
     model_path=None,
