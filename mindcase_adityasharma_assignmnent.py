@@ -1,19 +1,18 @@
-
 import os
-import sys
-import torch
 import streamlit as st
 from llama_index.core import SimpleDirectoryReader, Document, VectorStoreIndex, ServiceContext, load_index_from_storage
 from llama_index.llms.llama_cpp import LlamaCPP
+from llama_index.llms.llama_cpp.llama_utils import (
+    messages_to_prompt,
+    completion_to_prompt,
+)
 from llama_index.core.node_parser import SentenceWindowNodeParser
 from llama_index.core.postprocessor import MetadataReplacementPostProcessor, SentenceTransformerRerank
+from llama_index.core.storage import StorageContext
+from llama_index.core.callbacks import CallbackManager
 
+callback_manager = CallbackManager()
 # Initialize LlamaCPP with a pretrained model.
-
-messages_to_prompt = [...]  # Define your messages_to_prompt list here
-completion_to_prompt = [...]  # Define your completion_to_prompt list here
-
-
 llm = LlamaCPP(
     model_url='https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf',
     model_path=None,
@@ -28,7 +27,7 @@ llm = LlamaCPP(
 )
 
 # Load documents
-documents = SimpleDirectoryReader(input_files=["/content/Mindcase Data.pdf"]).load_data()
+documents = SimpleDirectoryReader(input_files=["./Mindcase Data.pdf"]).load_data()
 documents = Document(text="\n\n".join([doc.text for doc in documents]))
 
 # Build vector index
@@ -60,13 +59,3 @@ def get_query_engine(sentence_index, similarity_top_k=6, rerank_top_n=2):
     return engine
 
 query_engine = get_query_engine(sentence_index=vector_index, similarity_top_k=6, rerank_top_n=2)
-
-# Streamlit app
-st.title("Blade Runner 2049 Expert")
-user_input = st.text_input("Enter your questions about Blade Runner 2049:", "")
-if st.button("Submit"):
-    try:
-        response = query_engine.query(user_input)
-        st.write(response)
-    except Exception as e:
-        st.write(f"An error occurred: {e}")
